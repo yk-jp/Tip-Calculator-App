@@ -81,9 +81,11 @@
                                 <rect key="frame" x="132.5" y="728" width="149" height="71"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ncw-3h-rHB">
-                                        <rect key="frame" x="20.5" y="20" width="108.5" height="31"/>
+                                        <rect key="frame" x="-5" y="14" width="159" height="43"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Calculate Tip"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Calculate Tip">
+                                            <fontDescription key="titleFontDescription" type="system" pointSize="24"/>
+                                        </buttonConfiguration>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
