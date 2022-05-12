@@ -24,8 +24,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // hook up billAmountTextField to the view controller
-//        billAmountTextField.delegate = self
+        //        billAmountTextField.delegate = self
         updateLayout()
+        registerForKeyboardNotification()
+    }
+    
+    deinit {
+       removeForKeyboardNotification()
     }
     
     
@@ -34,13 +39,30 @@ class ViewController: UIViewController, UITextFieldDelegate {
         updateLayout()
     }
     
-    // when return key is tapped
-//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        updateValue()
-//        updateLayout()
-//        textField.resignFirstResponder()
-//        return true
-//    }
+    func registerForKeyboardNotification(){
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    func removeForKeyboardNotification(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self,  name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self,  name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc func keyboardWillChange(_ notification: NSNotification) {
+        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]) as? NSValue else {
+            return
+        }
+        let keyboardFrame = keyboardRect.cgRectValue
+        let keyboardSize = keyboardFrame.size
+        if notification.name == UIResponder.keyboardWillShowNotification || notification.name == UIResponder.keyboardWillChangeFrameNotification {
+         view.frame.origin.y =  -keyboardSize.height
+        } else {
+            view.frame.origin.y = 0
+        }
+    }
     
     // dismissing keyboard by touching outside of keyboard
     // it is reacted even when keyboard is not shown up
@@ -49,12 +71,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func updateValue() {
-        guard billAmountTextField.text != nil else {
+        guard billAmountTextField.text != nil, billAmountTextField.text != "" else {
             return
         }
         
         if let billAmountText = billAmountTextField.text {
-            let newVal = Double(billAmountText)
+            var newVal = Double(billAmountText)
+            
+            if newVal == nil {
+                newVal = 0
+            }
+            
             tips.updateVal(val: newVal!)
         }
     }
@@ -63,5 +90,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         tipAmountLabel.text = String(format: "$%.2f", tips.totalAmount)
         tipPercentageTextField.text = String(format:"$%.2f", tips.tipPercentage) + " %" //e.g 0.21
     }
+    
+    // when return key is tapped
+    //    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    //        updateValue()
+    //        updateLayout()
+    //        textField.resignFirstResponder()
+    //        return true
+    //    }
 }
 

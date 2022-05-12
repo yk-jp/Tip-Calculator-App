@@ -11,7 +11,7 @@ struct Tips {
     var tipPercentage:Double
     var val: Double
     var totalAmount:Double {
-       return val * (1 + tipPercentage)
+        return val * (1 + tipPercentage/100.0)
     }
     
     init() {
